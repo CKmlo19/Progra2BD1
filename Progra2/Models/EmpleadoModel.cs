@@ -4,6 +4,8 @@ namespace Progra2.Models
 {
     public class EmpleadoModel
     {
+        internal decimal Salario;
+
         public int Id { get; set; }
         public int IdPuesto { get; set; }
         public string? NombrePuesto { get; set; }
