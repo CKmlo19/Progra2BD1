@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Progra2.Models;
 using Progra2.Data;
+using Progra2.Models;
 
 namespace Progra2.Controllers
 {
     public class EmpleadoController : Controller
     {
-        EmpleadoDatos _EmpleadoDatos = new EmpleadoDatos();
+        EmpleadoData _EmpleadoDatos = new EmpleadoData();
 
         public IActionResult Listar()
         {
