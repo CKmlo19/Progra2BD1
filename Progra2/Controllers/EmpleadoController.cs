@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Progra2.Data;
 using Progra2.Models;
+
 namespace Progra2.Controllers
 {
     public class EmpleadoController : Controller
