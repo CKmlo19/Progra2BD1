@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Data;
 using Progra2.Models;
 using System.Data;
 
