@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Progra2.Data;
 using Progra2.Models;
+using System.Text.RegularExpressions;
 
 namespace Progra2.Controllers
 {
@@ -11,23 +13,37 @@ namespace Progra2.Controllers
         public IActionResult Listar()
         {
             // la lista mostrara una lista de empleados
-            var oLista = _EmpleadoDatos.Listar(); // llama al metodo de listar y lo muestra
+            var oLista = _EmpleadoDatos.Listar(""); // llama al metodo de listar y lo muestra
+            return View(oLista);
+        }
+        [HttpPost]
+        public IActionResult Listar(string campo)
+        {
+            if (campo == null) {
+                campo = "";
+            }
+            var oLista = _EmpleadoDatos.Listar(campo);
             return View(oLista);
         }
         public IActionResult Insertar()
         {
             // muestra el formulario para insertar
-            return View();
+            var puestos = _EmpleadoDatos.ListarPuesto();
+            var model = new EmpleadoModel
+            {
+                Puestos = puestos // Llenamos la lista de puestos para el ComboBox
+            };
+
+            return View(model);
         }
         [HttpPost]
         public IActionResult Insertar(EmpleadoModel oEmpleado)
         {
-            // este otro es para capturar los datos y enviarlo a la base de datos
 
             //validacion de los campos
             if (!ModelState.IsValid)
             { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
-                return View();
+                return View(listarPuestos());
             }
 
             var resultado = _EmpleadoDatos.Insertar(oEmpleado);
@@ -41,8 +57,22 @@ namespace Progra2.Controllers
             {
                 ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
                 //return RedirectToAction("Fracaso");
-                return View();
+                return View(listarPuestos());
             }
         }
+
+        // Funcion privada para no repetir codigo
+        private EmpleadoModel listarPuestos() {
+            // este otro es para capturar los datos y enviarlo a la base de datos
+            var puestos = _EmpleadoDatos.ListarPuesto();
+            var model = new EmpleadoModel
+            {
+                Puestos = puestos // Llenamos la lista de puestos para el ComboBox
+            };
+            return model;
+        }
+
+
+
     }
 }
