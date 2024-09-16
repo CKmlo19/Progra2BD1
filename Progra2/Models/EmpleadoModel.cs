@@ -4,8 +4,6 @@ namespace Progra2.Models
 {
     public class EmpleadoModel
     {
-        internal decimal Salario;
-
         public int Id { get; set; }
         public int IdPuesto { get; set; }
         public string? NombrePuesto { get; set; }
@@ -17,6 +15,8 @@ namespace Progra2.Models
         public string? Nombre { get; set; }
         public DateTime FechaContratacion { get; set; }
         public short SaldoVacaciones { get; set; }
-        public bool EsActivo { get; set; }
+
+        // Agregamos la lista de puestos para el ComboBox
+        public List<PuestoModel> Puestos { get; set; }
     }
 }

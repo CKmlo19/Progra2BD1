@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Progra2.Data;
 using Progra2.Models;
+using System.Text.RegularExpressions;
 
 namespace Progra2.Controllers
 {
@@ -11,13 +13,20 @@ namespace Progra2.Controllers
         public IActionResult Listar()
         {
             // la lista mostrara una lista de empleados
-            var oLista = _EmpleadoDatos.Listar(); // llama al metodo de listar y lo muestra
+            var oLista = _EmpleadoDatos.Listar(""); // llama al metodo de listar y lo muestra
+            return View(oLista);
+        }
+        [HttpPost]
+        public IActionResult Listar(string campo)
+        {
+            var oLista = _EmpleadoDatos.Listar(campo);
             return View(oLista);
         }
         public IActionResult Insertar()
         {
             // muestra el formulario para insertar
-            return View();
+            var puestos = _EmpleadoDatos.ListarPuesto();
+            return View(puestos);
         }
         [HttpPost]
         public IActionResult Insertar(EmpleadoModel oEmpleado)
@@ -44,5 +53,8 @@ namespace Progra2.Controllers
                 return View();
             }
         }
+
+
+
     }
 }
