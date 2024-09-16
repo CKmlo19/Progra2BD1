@@ -24,7 +24,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label">Puesto</label>
-                <select id="idPuesto" name="idPuesto" class="form-control">
+                <select asp-for="IdPuesto" class="form-control" id="idPuesto" name="idPuesto" class="form-control">
                     @foreach (var puesto in Model.Puestos)
                     {
                         <option value="@puesto.Id">@puesto.Nombre</option>

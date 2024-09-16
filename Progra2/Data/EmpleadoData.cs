@@ -44,14 +44,25 @@ namespace Progra2.Data
                 using (var dr = cmd.ExecuteReader()) // este se utiliza cuando se retorna una gran cantidad de datos, por ejemplo la tabla completa
                 {
                     // hace una lectura del procedimiento almacenado
+
+
                     while (dr.Read())
                     {
+                        // Imprime el nombre de todas las columnas
+                        for (int i = 0; i < dr.FieldCount; i++)
+                        {
+                            Console.WriteLine(dr.GetName(i) + ": " + dr[i]);
+                        }
                         oLista.Add(new EmpleadoModel()
                         {
                             // tecnicamente hace un select, es por eso que se lee cada registro uno a uno que ya esta ordenado
                             Id = (int)Convert.ToInt64(dr["Id"]),
                             Nombre = dr["Nombre"].ToString(),
-                            //Salario = Convert.ToDecimal(dr["Salario"])
+                            IdPuesto = (int)Convert.ToInt64(dr["idPuesto"]),
+                            SaldoVacaciones = (short)Convert.ToInt16(dr["SaldoVacaciones"]),
+                            FechaContratacion = (DateTime)dr["FechaContratacion"],
+                            NombrePuesto = dr["NombrePuesto"].ToString(),
+                            ValorDocumentoIdentidad = dr["ValorDocumentoIdentidad"].ToString()
                         });
                     }
                 }
@@ -212,7 +223,7 @@ namespace Progra2.Data
                         {                            // tecnicamente hace un select, es por eso que se lee cada registro uno a uno que ya esta ordenado
                             Id = (int)Convert.ToInt64(dr["Id"]),
                             Nombre = dr["Nombre"].ToString(),
-                            SalarioxHora = Convert.ToDecimal(dr["SalarioxHora"])
+                            SalarioxHora = Convert.ToDecimal(dr["SalarioHora"])
                         });
                     }
                 }
