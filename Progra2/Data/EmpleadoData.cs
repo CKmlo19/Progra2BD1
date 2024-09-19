@@ -211,6 +211,7 @@ namespace Progra2.Data
                 {
                     Direction = ParameterDirection.Output
                 };
+                cmd.Parameters.Add(outputParam);
                 cmd.CommandType = CommandType.StoredProcedure;
                 using (var dr = cmd.ExecuteReader()) // este se utiliza cuando se retorna una gran cantidad de datos, por ejemplo la tabla completa
                 {

@@ -61,29 +61,20 @@ namespace Progra2.Controllers
             }
         }
 
-        // Funcion privada para no repetir codigo
-        private EmpleadoModel listarPuestos() {
-            // este otro es para capturar los datos y enviarlo a la base de datos
-            var puestos = _EmpleadoDatos.ListarPuesto();
-            var model = new EmpleadoModel
-            {
-                Puestos = puestos // Llenamos la lista de puestos para el ComboBox
-            };
-            return model;
-        }
-
         // Funcion para editar los empleados
         public IActionResult Editar(int Id)
         {
             // muestra el formulario para editar
-            var puestos = _EmpleadoDatos.Obtener(Id);
-            return View(puestos);
+            var model = _EmpleadoDatos.Obtener(Id);
+            model.Puestos = _EmpleadoDatos.ListarPuesto();
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult Editar(EmpleadoModel oEmpleado)
         {
             
+
             //validacion de los campos
             if (!ModelState.IsValid)
             { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
@@ -101,8 +92,22 @@ namespace Progra2.Controllers
             {
                 ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
                 //return RedirectToAction("Fracaso");
-                return View();
+                return View(listarPuestos());
             }
+        }
+
+
+
+        // Funcion privada para no repetir codigo
+        private EmpleadoModel listarPuestos()
+        {
+            // este otro es para capturar los datos y enviarlo a la base de datos
+            var puestos = _EmpleadoDatos.ListarPuesto();
+            var model = new EmpleadoModel
+            {
+                Puestos = puestos // Llenamos la lista de puestos para el ComboBox
+            };
+            return model;
         }
     }
 }
