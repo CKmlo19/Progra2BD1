@@ -126,7 +126,7 @@ namespace Progra2.Data
                     SqlCommand cmd = new SqlCommand("dbo.EditarEmpleado", conexion);
                     cmd.Parameters.AddWithValue("inId", oEmpleado.Id);
                     cmd.Parameters.AddWithValue("inNombre", oEmpleado.Nombre.Trim()); // se le hace un trim a la hora de insertar
-                    cmd.Parameters.AddWithValue("inNombrePuesto", oEmpleado.NombrePuesto);
+                    cmd.Parameters.AddWithValue("inIdPuesto", oEmpleado.IdPuesto);
                     cmd.Parameters.AddWithValue("inValorDocumentoIdentidad", oEmpleado.ValorDocumentoIdentidad);
                     // Configurar el parámetro de salida
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
