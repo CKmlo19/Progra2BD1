@@ -76,7 +76,7 @@ namespace Progra2.Controllers
         public IActionResult Editar(int Id)
         {
             // muestra el formulario para editar
-            var puestos;
+            var puestos = _EmpleadoDatos.Obtener(Id);
             return View(puestos);
         }
 
@@ -84,7 +84,6 @@ namespace Progra2.Controllers
         public IActionResult Editar(EmpleadoModel oEmpleado)
         {
             
-
             //validacion de los campos
             if (!ModelState.IsValid)
             { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
@@ -102,7 +101,7 @@ namespace Progra2.Controllers
             {
                 ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
                 //return RedirectToAction("Fracaso");
-                return View(listarPuestos());
+                return View();
             }
         }
     }
