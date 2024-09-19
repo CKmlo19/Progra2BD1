@@ -194,6 +194,41 @@ namespace Progra2.Data
 
         }
 
+        public EmpleadoModel Obtener(int id)
+        {
+            var oEmpleado = new EmpleadoModel();
+
+            var cn = new Conexion();
+
+            // abre la conexion
+            using (var conexion = new SqlConnection(cn.getCadenaSQL()))
+            {
+                conexion.Open();
+                // el procedure de listar
+                SqlCommand cmd = new SqlCommand("dbo.ObtenerEmpleado", conexion);
+                cmd.Parameters.AddWithValue("inId", id);
+                SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                cmd.CommandType = CommandType.StoredProcedure;
+                using (var dr = cmd.ExecuteReader()) // este se utiliza cuando se retorna una gran cantidad de datos, por ejemplo la tabla completa
+                {
+                    // hace una lectura del procedimiento almacenado
+                    while (dr.Read())
+                    {
+                        oEmpleado.Id = (int)Convert.ToInt64(dr["id"]);
+                        oEmpleado.IdPuesto = (int)Convert.ToInt64(dr["idPuesto"]);
+                        oEmpleado.ValorDocumentoIdentidad = dr["ValorDocumentoIdentidad"].ToString();
+                        oEmpleado.Nombre = dr["Nombre"].ToString();
+                        oEmpleado.FechaContratacion = (DateTime)dr["FechaContratacion"];
+                        oEmpleado.SaldoVacaciones = (short)(dr["SaldoVacaciones"]);
+                    }
+                }
+            }
+            return oEmpleado;
+        }
+
         // Esta funcion sirve para listar los puestos que tienen un id vinculados 
         public List<PuestoModel> ListarPuesto()
         {
