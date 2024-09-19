@@ -72,7 +72,38 @@ namespace Progra2.Controllers
             return model;
         }
 
+        // Funcion para editar los empleados
+        public IActionResult Editar(int Id)
+        {
+            // muestra el formulario para editar
+            var puestos;
+            return View(puestos);
+        }
 
+        [HttpPost]
+        public IActionResult Editar(EmpleadoModel oEmpleado)
+        {
+            
 
+            //validacion de los campos
+            if (!ModelState.IsValid)
+            { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
+                return View(listarPuestos());
+            }
+
+            var resultado = _EmpleadoDatos.Editar(oEmpleado);
+
+            if (resultado == 0)
+            {
+                TempData["ShowModal"] = true; // Indicador para mostrar el modal
+                return RedirectToAction("Listar");
+            }
+            else
+            {
+                ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
+                //return RedirectToAction("Fracaso");
+                return View(listarPuestos());
+            }
+        }
     }
 }
