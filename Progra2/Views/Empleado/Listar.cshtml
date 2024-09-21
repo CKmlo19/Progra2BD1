@@ -39,6 +39,7 @@
                         <td>@item.NombrePuesto</td>
                         <td>
                             <a asp-action="Editar" asp-controller="Empleado" class="btn btn-primary btn-sm" asp-route-Id="@item.Id">Editar</a>
+                            <a asp-action="Eliminar" asp-controller="Empleado" class="btn btn-danger btn-sm" asp-route-Id="@item.Id">Eliminar</a>
                         </td>
                     </tr>
                 }

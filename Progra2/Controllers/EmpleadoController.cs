@@ -96,7 +96,39 @@ namespace Progra2.Controllers
             }
         }
 
+        // Funcion para eliminar los empleados
+        public IActionResult Eliminar(int Id)
+        {
+            // muestra el formulario para editar
+            var model = _EmpleadoDatos.Obtener(Id);
+            model.Puestos = _EmpleadoDatos.ListarPuesto();
+            return View(model);
+        }
 
+        [HttpPost]
+        public IActionResult Eliminar(EmpleadoModel oEmpleado)
+        {
+
+            //validacion de los campos
+            if (!ModelState.IsValid)
+            { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
+                return View(listarPuestos());
+            }
+
+            var resultado = _EmpleadoDatos.Eliminar(oEmpleado.Id);
+
+            if (resultado == 0)
+            {
+                TempData["ShowModal"] = true; // Indicador para mostrar el modal
+                return RedirectToAction("Listar");
+            }
+            else
+            {
+                ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
+                //return RedirectToAction("Fracaso");
+                return View(listarPuestos());
+            }
+        }
 
         // Funcion privada para no repetir codigo
         private EmpleadoModel listarPuestos()
