@@ -259,7 +259,7 @@ namespace Progra2.Data
                         {                            // tecnicamente hace un select, es por eso que se lee cada registro uno a uno que ya esta ordenado
                             Id = (int)Convert.ToInt64(dr["Id"]),
                             Nombre = dr["Nombre"].ToString(),
-                            SalarioxHora = Convert.ToDecimal(dr["SalarioHora"])
+                            SalarioxHora = Convert.ToDecimal(dr["SalarioxHora"])
                         });
                     }
                 }
