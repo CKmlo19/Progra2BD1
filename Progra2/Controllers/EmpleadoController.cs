@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Progra2.Data;
 using Progra2.Models;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Progra2.Controllers
 {
+    [Authorize]
     public class EmpleadoController : Controller
     {
         EmpleadoData _EmpleadoDatos = new EmpleadoData();

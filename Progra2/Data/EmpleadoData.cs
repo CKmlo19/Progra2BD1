@@ -267,7 +267,7 @@ namespace Progra2.Data
             return oLista;
         }
 
-        public int VerificarUsuario(string username, string password)
+        public int VerificarUsuario(UsuarioModel usuario)
         {
             int resultado;
 
@@ -285,8 +285,8 @@ namespace Progra2.Data
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     // Agrega los parámetros de entrada
-                    cmd.Parameters.AddWithValue("inUsername", username.Trim());
-                    cmd.Parameters.AddWithValue("inPassword", password.Trim());
+                    cmd.Parameters.AddWithValue("inUsername", usuario.username);
+                    cmd.Parameters.AddWithValue("inPassword", usuario.password);
 
                     // Parámetro de salida para el código de resultado
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
@@ -328,7 +328,7 @@ namespace Progra2.Data
         private bool ContieneLetrasYEspacios(string cadena)
         {
             // Patrón de expresión regular para verificar si la cadena contiene solo letras y espacios en blanco
-            string patron = @"^[a-zA-Z\s]+$";
+            string patron = @"^[a-zA-ZáéíóúÁÉÍÓÚñÑ\- ]+$";
 
             // Creamos un objeto Regex con el patrón especificado
             Regex regex = new Regex(patron);
