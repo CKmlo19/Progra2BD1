@@ -1,10 +1,9 @@
-using Progra2.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton(new DbContext(builder.Configuration.GetConnectionString("CadenaSQL");
+
 
 var app = builder.Build();
 
@@ -25,6 +24,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Empleado}/{action=Listar}/{id?}");
+    pattern: "{controller=Usuario}/{action=Login}/{id?}");
 
 app.Run();

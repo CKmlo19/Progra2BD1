@@ -267,10 +267,53 @@ namespace Progra2.Data
             return oLista;
         }
 
+        public int VerificarUsuario(string username, string password)
+        {
+            int resultado;
 
+            try
+            {
+                var cn = new Conexion();
 
-        // Funciones privadas
-        private bool ContieneNumeros(string cadena)
+                // Abre la conexión
+                using (var conexion = new SqlConnection(cn.getCadenaSQL()))
+                {
+                    conexion.Open();
+
+                    // Llama al procedimiento almacenado
+                    SqlCommand cmd = new SqlCommand("dbo.VerificarUsuario", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Agrega los parámetros de entrada
+                    cmd.Parameters.AddWithValue("inUsername", username.Trim());
+                    cmd.Parameters.AddWithValue("inPassword", password.Trim());
+
+                    // Parámetro de salida para el código de resultado
+                    SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outputParam);
+
+                    // Ejecuta el procedimiento almacenado
+                    cmd.ExecuteNonQuery();
+
+                    // Obtiene el resultado del parámetro de salida
+                    resultado = (int)cmd.Parameters["@OutResultCode"].Value;
+                }
+            }
+            catch (Exception e)
+            {
+                // Si ocurre un error, el código 50005 es un código de error estándar
+                resultado = 50005;
+            }
+
+            return resultado;
+        }
+    
+
+    // Funciones privadas
+    private bool ContieneNumeros(string cadena)
         {
             // Patrón de expresión regular para verificar si la cadena contiene al menos un dígito
             string patron = @"^\d+$"; ;

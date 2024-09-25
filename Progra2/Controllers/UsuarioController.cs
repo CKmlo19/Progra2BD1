@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Progra2.Data;
 using Progra2.Models;
 using System.Data;
@@ -7,64 +6,39 @@ using System.Data.SqlClient;
 
 namespace Progra2.Controllers
 {
-    public class UsuarioController 
+    public class UsuarioController : Controller
     {
+        EmpleadoData _EmpleadoDatos = new EmpleadoData();
 
-        public UsuarioController(DbContext contexto)
-        {
-            _contexto = contexto;
-        }
-
-        public ActionResult Login()
+        // Acción para mostrar la vista de Login
+        public IActionResult Login()
         {
             return View("Login");
         }
 
+        // Acción para manejar el envío del formulario de Login
         [HttpPost]
-        public ActionResult Login(LoginModel l)
+        public IActionResult VerificarUsuario(string username, string password, string campo)
         {
-            try
+            var usuarioData = new EmpleadoData(); 
+            int resultado = usuarioData.VerificarUsuario(username, password); // método para verificar el usuario
+
+            // Si el usuario es válido, crea el modelo y pásalo a la vista.
+            if (resultado == 0) // 0 significa un usuario válido
             {
-                if (ModelState.IsValid)
+                if (campo == null)
                 {
-                    using (SqlConnection con = new(_contexto.Valor))
-                    {
-                        using (SqlCommand cmd = new("sp_login", con))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.Add("@Usuario", SqlDbType.VarChar).Value = l.Usuario;
-                            cmd.Parameters.Add("@Clave", SqlDbType.VarChar).Value = l.Clave;
-                            con.Open();
-
-                            SqlDataReader dr = cmd.ExecuteReader();
-
-                            if (dr.Read())
-                            {
-                                Response.Cookies.Append("user", "Bienvenido " + l.Usuario);
-                                return RedirectToAction("Index", "Home");
-                            }
-                            else
-                            {
-                                ViewData["error"] = "Error de credenciales";
-                            }
-
-                            con.Close();
-                        }
-                    }
-                    return RedirectToAction("Index", "Home");
+                    campo = "";
                 }
-            }
-            catch (Exception)
-            {
-                return View("Login");
-            }
-            return View("Login");
-        }
+                var oLista = _EmpleadoDatos.Listar(campo);
+                return View(oLista);
 
-        public ActionResult Logout()
-        {
-            Response.Cookies.Delete("user");
-            return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Usuario o contraseña incorrectos.";
+                return RedirectToAction("Login"); // Redirige a la vista de login
+            }
         }
     }
 }
