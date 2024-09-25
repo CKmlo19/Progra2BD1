@@ -5,7 +5,7 @@ using Progra2.Models;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace MVC.Controllers
+namespace Progra2.Controllers
 {
     public class UsuarioController 
     {
