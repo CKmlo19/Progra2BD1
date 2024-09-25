@@ -9,7 +9,6 @@ namespace Progra2.Controllers
 {
     public class UsuarioController 
     {
-        private readonly DbContext _contexto;
 
         public UsuarioController(DbContext contexto)
         {
