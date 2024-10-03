@@ -70,7 +70,7 @@ namespace Progra2.Data
             return oLista;
         }
 
-        public int Insertar(EmpleadoModel oEmpleado)
+        public int Insertar(EmpleadoModel oEmpleado, int IdUser, string IP)
         {
             int resultado;
 
@@ -86,7 +86,9 @@ namespace Progra2.Data
                     SqlCommand cmd = new SqlCommand("dbo.InsertarEmpleado", conexion);
                     cmd.Parameters.AddWithValue("inNombre", oEmpleado.Nombre.Trim()); // se le hace un trim a la hora de insertar
                     cmd.Parameters.AddWithValue("inValorDocumentoIdentidad", oEmpleado.ValorDocumentoIdentidad.Trim()); // se le hace un trim a la hora de insertar
-                    cmd.Parameters.AddWithValue("inIdPuesto", oEmpleado.IdPuesto); 
+                    cmd.Parameters.AddWithValue("inIdPuesto", oEmpleado.IdPuesto);
+                    cmd.Parameters.AddWithValue("inIdUser", IdUser);
+                    cmd.Parameters.AddWithValue("inIP", IP);
                     //cmd.Parameters.AddWithValue("inSalario", oEmpleado.Salario);
                     // Configurar el parámetro de salida
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
@@ -110,7 +112,7 @@ namespace Progra2.Data
             return resultado;
         }
 
-        public int Editar(EmpleadoModel oEmpleado)
+        public int Editar(EmpleadoModel oEmpleado, int IdUser, string IP)
         {
             int resultado;
 
@@ -128,6 +130,8 @@ namespace Progra2.Data
                     cmd.Parameters.AddWithValue("inNombre", oEmpleado.Nombre.Trim()); // se le hace un trim a la hora de insertar
                     cmd.Parameters.AddWithValue("inIdPuesto", oEmpleado.IdPuesto);
                     cmd.Parameters.AddWithValue("inValorDocumentoIdentidad", oEmpleado.ValorDocumentoIdentidad);
+                    cmd.Parameters.AddWithValue("inIdUser", IdUser);
+                    cmd.Parameters.AddWithValue("inIP", IP);
                     // Configurar el parámetro de salida
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
                     {
@@ -153,7 +157,7 @@ namespace Progra2.Data
             return resultado;
 
         }
-        public int Eliminar(int id)
+        public int Eliminar(int id, int IdUser, string IP)
         {
             int resultado;
 
@@ -168,6 +172,8 @@ namespace Progra2.Data
                     // el procedure de listar
                     SqlCommand cmd = new SqlCommand("dbo.EliminarEmpleado", conexion);
                     cmd.Parameters.AddWithValue("inId", id); // se le hace un trim a la hora de insertar
+                    cmd.Parameters.AddWithValue("inIdUser", IdUser);
+                    cmd.Parameters.AddWithValue("inIP", IP);
                     // Configurar el parámetro de salida
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
                     {
