@@ -310,10 +310,56 @@ namespace Progra2.Data
 
             return resultado;
         }
-    
 
-    // Funciones privadas
-    private bool ContieneNumeros(string cadena)
+        public int Trazabilidad(int idTipoEvento, int idPostByUser, string descripcion, string postInIP)
+        {
+            int resultado;
+
+            try
+            {
+                var cn = new Conexion();
+
+                // Abre la conexión
+                using (var conexion = new SqlConnection(cn.getCadenaSQL()))
+                {
+                    conexion.Open();
+
+                    // Llama al procedimiento almacenado
+                    SqlCommand cmd = new SqlCommand("dbo.Trazabilidad", conexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Agrega los parámetros de entrada
+                    cmd.Parameters.AddWithValue("@inIdTipoEvento", idTipoEvento);
+                    cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    cmd.Parameters.AddWithValue("@inDescripcion", descripcion);
+                    cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
+
+                    // Parámetro de salida para el código de resultado
+                    SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outputParam);
+
+                    // Ejecuta el procedimiento almacenado
+                    cmd.ExecuteNonQuery();
+
+                    // Obtiene el resultado del parámetro de salida
+                    resultado = (int)cmd.Parameters["@OutResultCode"].Value;
+                }
+            }
+            catch (Exception e)
+            {
+                // Si ocurre un error, asignamos un código de error estándar
+                resultado = 50005;
+            }
+
+            return resultado;
+        }
+
+
+        // Funciones privadas
+        private bool ContieneNumeros(string cadena)
         {
             // Patrón de expresión regular para verificar si la cadena contiene al menos un dígito
             string patron = @"^\d+$"; ;
