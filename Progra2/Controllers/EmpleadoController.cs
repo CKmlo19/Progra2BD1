@@ -39,7 +39,7 @@ namespace Progra2.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Insertar(EmpleadoModel oEmpleado)
+        public IActionResult Insertar(EmpleadoModel oEmpleado, UsuarioModel usuario)
         {
 
             //validacion de los campos
@@ -47,8 +47,9 @@ namespace Progra2.Controllers
             { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
                 return View(listarPuestos());
             }
-
-            var resultado = _EmpleadoDatos.Insertar(oEmpleado);
+            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+            var resultado = _EmpleadoDatos.Insertar(oEmpleado, esUsuarioValido, ipAddress);
 
             if (resultado == 0)
             {
@@ -73,7 +74,7 @@ namespace Progra2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Editar(EmpleadoModel oEmpleado)
+        public IActionResult Editar(EmpleadoModel oEmpleado, UsuarioModel usuario)
         {
             
 
@@ -83,7 +84,9 @@ namespace Progra2.Controllers
                 return View(listarPuestos());
             }
 
-            var resultado = _EmpleadoDatos.Editar(oEmpleado);
+            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+            var resultado = _EmpleadoDatos.Editar(oEmpleado, esUsuarioValido, ipAddress);
 
             if (resultado == 0)
             {
@@ -108,7 +111,7 @@ namespace Progra2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Eliminar(EmpleadoModel oEmpleado)
+        public IActionResult Eliminar(EmpleadoModel oEmpleado, UsuarioModel usuario)
         {
 
             //validacion de los campos
@@ -117,7 +120,9 @@ namespace Progra2.Controllers
                 return View(listarPuestos());
             }
 
-            var resultado = _EmpleadoDatos.Eliminar(oEmpleado.Id);
+            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+            var resultado = _EmpleadoDatos.Eliminar(oEmpleado.Id, esUsuarioValido, ipAddress);
 
             if (resultado == 0)
             {

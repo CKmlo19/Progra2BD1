@@ -47,7 +47,6 @@ namespace Progra2.Controllers
             }
             
             int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
-
             var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
 
             
