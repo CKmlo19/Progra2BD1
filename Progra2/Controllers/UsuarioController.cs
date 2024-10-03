@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Progra2.Data;
 using Progra2.Models;
 using System.Security.Claims;
+using System.Net;
 
 namespace Progra2.Controllers
 {
@@ -44,12 +45,14 @@ namespace Progra2.Controllers
                 TempData["ErrorMessage"] = "Su cuenta está bloqueada.";
                 return RedirectToAction("Login");
             }
+            
+            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
 
-            // Verificar el usuario en la base de datos (mejora el método para optimizar rendimiento)
-            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario);
-           
-            if (esUsuarioValido == 0)
-            {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+
+            
+            if (esUsuarioValido == 0) //Login Exitoso
+            { 
                 // Reiniciar el contador de intentos fallidos
                 HttpContext.Session.SetInt32("LoginAttempts", 0);
 
@@ -57,7 +60,7 @@ namespace Progra2.Controllers
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, usuario.username),
-                    new Claim(ClaimTypes.Role, "Usuario") // Puedes agregar más claims según sea necesario
+                    new Claim(ClaimTypes.Role, "Usuario") 
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -65,18 +68,43 @@ namespace Progra2.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                               new ClaimsPrincipal(claimsIdentity));
 
+                // Llamada para registrar la trazabilidad
+                
+                int resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
+                    1,                      // 1 Login Exitoso 
+                    esUsuarioValido,        // ID del usuario que generó el evento
+                    "",                     // Descripción del evento login exitoso
+                    ipAddress               
+                );
+
                 return RedirectToAction("Listar", "Empleado");
             }
-            else
+            else //Login No exitoso
             {
+                // Llamada para registrar la trazabilidad
+                int resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
+                    2,                     // 2 Login no exitoso 
+                    esUsuarioValido,        
+                    loginAttempts.ToString(), // cantidad de intentos
+                    ipAddress               
+                );
+
                 // Incrementar los intentos fallidos
                 loginAttempts++;
                 HttpContext.Session.SetInt32("LoginAttempts", loginAttempts);
 
-                // Si se ha alcanzado el número máximo de intentos, bloquear cuenta
-                if (loginAttempts >= MaxLoginAttempts)
+                
+                if (loginAttempts >= MaxLoginAttempts) // Si se ha alcanzado el número máximo de intentos, bloquear cuenta
                 {
                     TempData["ErrorMessage"] = "Su cuenta ha sido bloqueada debido a demasiados intentos fallidos.";
+
+                    // Llamada para registrar la trazabilidad
+                    resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
+                        3,                     // 3 Login deshabilitado
+                        esUsuarioValido,        
+                        "", // Descripción del evento login exitoso
+                        ipAddress               
+                    );
                 }
                 else
                 {
@@ -87,10 +115,22 @@ namespace Progra2.Controllers
             }
         }
 
-        public async Task<IActionResult> Salir()
+        public async Task<IActionResult> Salir(UsuarioModel usuario)
         {
+           
+            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario);
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+
+            int resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
+                4,                     // 4 Logout 
+                esUsuarioValido,
+                "", // Descripción del evento login exitoso
+                ipAddress
+            );
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Clear(); // Limpiar la sesión
+
             return RedirectToAction("Login");
         }
     }
