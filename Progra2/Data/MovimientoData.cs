@@ -50,5 +50,44 @@ namespace Progra2.Data
 
             return oLista;
         }
+
+        public int Insertar(MovimientoModel oMovimiento)
+        {
+            int resultado;
+
+            try
+            {
+                var cn = new Conexion();
+
+                // abre la conexion
+                using (var conexion = new SqlConnection(cn.getCadenaSQL()))
+                {
+                    conexion.Open();
+                    SqlCommand cmd1 = new SqlCommand("dbo.InsertarMovimiento", conexion);
+                    cmd1.CommandType = CommandType.StoredProcedure;
+
+
+                    cmd1.Parameters.AddWithValue("@inIdEmpleado", oMovimiento.IdEmpleado);
+                    cmd1.Parameters.AddWithValue("@inNombreTipoMovimiento", oMovimiento.idT);
+                    cmd1.Parameters.AddWithValue("@inNombreUsuario", oMovimiento.NombreUsuario);
+                    cmd1.Parameters.AddWithValue("@inMonto", oMovimiento.Monto);
+                    cmd1.Parameters.AddWithValue("@inPostIp", oMovimiento.PostIP);
+                    cmd1.Parameters.Add("@OutResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd1.ExecuteNonQuery();
+                }
+                resultado = true;
+
+
+            }
+            catch (Exception e)
+            {
+                resultado = false;
+                Console.WriteLine("Error: " + e.Message);
+            }
+
+
+            return resultado;
+
+        }
     }
 }

@@ -14,5 +14,22 @@ namespace Progra2.Controllers
             return View(oLista);
             
         }
+
+        public IActionResult Insertar(int id) 
+        {
+            var puestos = _EmpleadoDatos.ListarPuesto();
+            var model = new EmpleadoModel
+            {
+                Puestos = puestos // Llenamos la lista de puestos para el ComboBox
+            };
+
+            return View(model);
+        }
+      
+        [HttpPost]
+        public IActionResult Insertar()
+        {
+            return View();
+        }
     }
 }

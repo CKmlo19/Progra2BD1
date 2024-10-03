@@ -10,6 +10,7 @@ namespace Progra2.Models
         public string? username { get; set; }
 
         [Required(ErrorMessage = "Campo requerido")]
-        public string? password { get; set; }       
+        public string? password { get; set; }
+        public string? PostIP { get; set; }
     }
 }
