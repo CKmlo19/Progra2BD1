@@ -1,0 +1,38 @@
+﻿@model MovimientoModel
+@{
+    ViewData["Title"] = "Insertar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-header">
+        Insertar Movimiento
+    </div>
+    <div class="card-body">
+
+        <form asp-action="Insertar" asp-controller="Movimiento" method="post">
+            <div class="mb-3">
+                <label class="form-label">Monto</label>
+                <input asp-for="Monto" class="form-control">
+                <span asp-validation-for="Monto" class="text-danger"></span>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tipo Movimiento</label>
+                <select asp-for="IdTipoMovimiento" class="form-control" id="idTipoMovimiento" name="idTipoMovimiento" class="form-control">
+                    @foreach (var tipoMovimiento in Model.TipoMovimiento)
+                    {
+                        <option value="@tipoMovimiento.Id">@tipoMovimiento.Nombre</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-abrir-modal">Insertar</button>
+            <a asp-action="Listar" asp-controller="Movimiento" class="btn btn-warning" asp-route-id="@EmpleadoModel.GetInstance().Id">Regresar</a>
+
+          
+        </form>
+
+    </div>
+</div>
+

@@ -20,5 +20,16 @@ namespace Progra2.Models
 
         // Agregamos la lista de puestos para el ComboBox
         public List<PuestoModel>? Puestos { get; set; }
+
+        // Un singleton de empleado para insertar movimientos
+        private static EmpleadoModel _instance;
+        public static EmpleadoModel GetInstance()
+        {
+            if (_instance == null)
+            {
+                _instance = new EmpleadoModel();
+            }
+            return _instance;
+        }
     }
 }

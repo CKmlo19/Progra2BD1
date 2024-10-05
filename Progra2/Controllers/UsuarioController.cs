@@ -54,6 +54,7 @@ namespace Progra2.Controllers
             { 
                 // Reiniciar el contador de intentos fallidos
                 HttpContext.Session.SetInt32("LoginAttempts", 0);
+                UsuarioModel.GetInstance().SetUsuario(usuario); // instanciamos un usuario por sesion
 
                 // Crear claims para la autenticación
                 var claims = new List<Claim>
@@ -67,26 +68,12 @@ namespace Progra2.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                               new ClaimsPrincipal(claimsIdentity));
 
-                // Llamada para registrar la trazabilidad
-                
-                int resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
-                    1,                      // 1 Login Exitoso 
-                    esUsuarioValido,        // ID del usuario que generó el evento
-                    "",                     // Descripción del evento login exitoso
-                    ipAddress               
-                );
 
                 return RedirectToAction("Listar", "Empleado");
             }
             else //Login No exitoso
             {
-                // Llamada para registrar la trazabilidad
-                int resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
-                    2,                     // 2 Login no exitoso 
-                    esUsuarioValido,        
-                    loginAttempts.ToString(), // cantidad de intentos
-                    ipAddress               
-                );
+
 
                 // Incrementar los intentos fallidos
                 loginAttempts++;
@@ -96,14 +83,6 @@ namespace Progra2.Controllers
                 if (loginAttempts >= MaxLoginAttempts) // Si se ha alcanzado el número máximo de intentos, bloquear cuenta
                 {
                     TempData["ErrorMessage"] = "Su cuenta ha sido bloqueada debido a demasiados intentos fallidos.";
-
-                    // Llamada para registrar la trazabilidad
-                    resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
-                        3,                     // 3 Login deshabilitado
-                        esUsuarioValido,        
-                        "", // Descripción del evento login exitoso
-                        ipAddress               
-                    );
                 }
                 else
                 {
@@ -117,15 +96,6 @@ namespace Progra2.Controllers
         public async Task<IActionResult> Salir(UsuarioModel usuario)
         {
            
-            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario);
-            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
-
-            int resultadoTrazabilidad = _EmpleadoDatos.Trazabilidad(
-                4,                     // 4 Logout 
-                esUsuarioValido,
-                "", // Descripción del evento login exitoso
-                ipAddress
-            );
 
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Clear(); // Limpiar la sesión

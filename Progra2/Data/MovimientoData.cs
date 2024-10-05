@@ -1,7 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using Progra2.Models;
 using System.Data;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 namespace Progra2.Data
 {
     public class MovimientoData
@@ -51,7 +53,7 @@ namespace Progra2.Data
             return oLista;
         }
 
-        public int Insertar(MovimientoModel oMovimiento)
+        public int Insertar(MovimientoModel oMovimiento, string IP)
         {
             int resultado;
 
@@ -67,21 +69,23 @@ namespace Progra2.Data
                     cmd1.CommandType = CommandType.StoredProcedure;
 
 
-                    cmd1.Parameters.AddWithValue("@inIdEmpleado", oMovimiento.IdEmpleado);
-                    cmd1.Parameters.AddWithValue("@inNombreTipoMovimiento", oMovimiento.idT);
-                    cmd1.Parameters.AddWithValue("@inNombreUsuario", oMovimiento.NombreUsuario);
+                    cmd1.Parameters.AddWithValue("@inIdEmpleado", EmpleadoModel.GetInstance().Id);
+                    Console.WriteLine(EmpleadoModel.GetInstance().Id);
+                    cmd1.Parameters.AddWithValue("@inIdTipoMovimiento", oMovimiento.IdTipoMovimiento);
+                    cmd1.Parameters.AddWithValue("@inIdPostByUser", UsuarioModel.GetInstance().id);
+                    Console.WriteLine(UsuarioModel.GetInstance().id);
                     cmd1.Parameters.AddWithValue("@inMonto", oMovimiento.Monto);
-                    cmd1.Parameters.AddWithValue("@inPostIp", oMovimiento.PostIP);
+                    cmd1.Parameters.AddWithValue("@inPostInIp", IP);
                     cmd1.Parameters.Add("@OutResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd1.ExecuteNonQuery();
                 }
-                resultado = true;
+                resultado = 0;
 
 
             }
             catch (Exception e)
             {
-                resultado = false;
+                resultado = 50008;
                 Console.WriteLine("Error: " + e.Message);
             }
 
@@ -89,5 +93,42 @@ namespace Progra2.Data
             return resultado;
 
         }
+
+        public List<TipoMovimientoModel> ListarTiposMovimientos()
+        {
+            var oLista = new List<TipoMovimientoModel>();
+
+            var cn = new Conexion();
+
+            // abre la conexion
+            using (var conexion = new SqlConnection(cn.getCadenaSQL()))
+            {
+                conexion.Open();
+                // el procedure de listar
+                SqlCommand cmd = new SqlCommand("dbo.ListarTipoMovimiento", conexion);
+                SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                cmd.Parameters.Add(outputParam);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                using (var dr = cmd.ExecuteReader()) // este se utiliza cuando se retorna una gran cantidad de datos, por ejemplo la tabla completa
+                {
+                    // hace una lectura del procedimiento almacenado
+                    while (dr.Read())
+                    {
+                        oLista.Add(new TipoMovimientoModel()
+                        {                            // tecnicamente hace un select, es por eso que se lee cada registro uno a uno que ya esta ordenado
+                            Id = (int)Convert.ToInt64(dr["Id"]),
+                            Nombre = dr["Nombre"].ToString(),
+                            TipoAccion = dr["TipoAccion"].ToString()
+                        });
+                    }
+                }
+            }
+            return oLista;
+        }
+
     }
 }

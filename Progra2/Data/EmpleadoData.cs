@@ -5,6 +5,7 @@ using System.Data;
 using System.Text.RegularExpressions;
 
 
+
 namespace Progra2.Data
 {
     public class EmpleadoData
@@ -302,7 +303,15 @@ namespace Progra2.Data
                     cmd.Parameters.Add(outputParam);
 
                     // Ejecuta el procedimiento almacenado
-                    cmd.ExecuteNonQuery();
+                    using(var dr = cmd.ExecuteReader()) // este se utiliza cuando se retorna una gran cantidad de datos, por ejemplo la tabla completa
+                {
+                        // hace una lectura del procedimiento almacenado
+                        while (dr.Read())
+                        {
+                            usuario.id = (int)Convert.ToInt64(dr["id"]);
+ 
+                        }
+                    }
 
                     // Obtiene el resultado del parámetro de salida
                     resultado = (int)cmd.Parameters["@OutResultCode"].Value;
@@ -311,52 +320,6 @@ namespace Progra2.Data
             catch (Exception e)
             {
                 // Si ocurre un error, el código 50005 es un código de error estándar
-                resultado = 50005;
-            }
-
-            return resultado;
-        }
-
-        public int Trazabilidad(int idTipoEvento, int idPostByUser, string descripcion, string postInIP)
-        {
-            int resultado;
-
-            try
-            {
-                var cn = new Conexion();
-
-                // Abre la conexión
-                using (var conexion = new SqlConnection(cn.getCadenaSQL()))
-                {
-                    conexion.Open();
-
-                    // Llama al procedimiento almacenado
-                    SqlCommand cmd = new SqlCommand("dbo.Trazabilidad", conexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    // Agrega los parámetros de entrada
-                    cmd.Parameters.AddWithValue("@inIdTipoEvento", idTipoEvento);
-                    cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
-                    cmd.Parameters.AddWithValue("@inDescripcion", descripcion);
-                    cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
-
-                    // Parámetro de salida para el código de resultado
-                    SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    cmd.Parameters.Add(outputParam);
-
-                    // Ejecuta el procedimiento almacenado
-                    cmd.ExecuteNonQuery();
-
-                    // Obtiene el resultado del parámetro de salida
-                    resultado = (int)cmd.Parameters["@OutResultCode"].Value;
-                }
-            }
-            catch (Exception e)
-            {
-                // Si ocurre un error, asignamos un código de error estándar
                 resultado = 50005;
             }
 
