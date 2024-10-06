@@ -177,7 +177,7 @@ namespace Progra2.Data
                     cmd.Parameters.AddWithValue("inId", id); // se le hace un trim a la hora de insertar
                     cmd.Parameters.AddWithValue("inIdUser", IdUser);
                     cmd.Parameters.AddWithValue("inIP", IP);
-                    cmd.Parameters.AddWithValue("inBandera", IP);
+                    cmd.Parameters.AddWithValue("inBandera", bandera);
 
                     // Configurar el parámetro de salida
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)

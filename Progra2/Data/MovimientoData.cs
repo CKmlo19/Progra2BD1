@@ -4,6 +4,7 @@ using System.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 namespace Progra2.Data
 {
     public class MovimientoData
@@ -78,8 +79,9 @@ namespace Progra2.Data
                     cmd1.Parameters.AddWithValue("@inPostInIp", IP);
                     cmd1.Parameters.Add("@OutResultCode", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd1.ExecuteNonQuery();
+                    resultado = (int)cmd1.Parameters["@OutResultCode"].Value; // resultado es igual al codigo del output;
+
                 }
-                resultado = 0;
 
 
             }

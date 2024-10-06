@@ -115,13 +115,7 @@ namespace Progra2.Controllers
 
         [HttpPost]
         public IActionResult Eliminar(EmpleadoModel oEmpleado)
-        {
-
-            //validacion de los campos
-            if (!ModelState.IsValid)
-            { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
-                return View(listarPuestos());
-            }
+        { 
 
             var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
             var resultado = _EmpleadoDatos.Eliminar(oEmpleado.Id, UsuarioModel.GetInstance().id, ipAddress, 1);
