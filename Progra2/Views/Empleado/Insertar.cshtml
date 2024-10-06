@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <div class="card">
     <div class="card-header">
         Insertar Empleado
@@ -35,33 +34,8 @@
             <a asp-action="Listar" asp-controller="Empleado" class="btn btn-warning">Regresar</a>
         </form>
     </div>
-    <!-- Modal de error -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Error</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Hubo un error al insertar el empleado.
-                    Ya existe un empleado con el mismo nombre
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    
 </div>
 
 
-<script>
-    $(document).ready(function () {
-        // mostrar el modal si ViewBag.ShowErrorModal esta en true
-        var showModal = '@(ViewBag.ShowErrorModal ?? false)';
-        if (showModal.toLowerCase() === 'true') {
-            $('#errorModal').modal('show');
-        }
-    });
-</script>

@@ -62,8 +62,7 @@ namespace Progra2.Controllers
             }
             else
             {
-                ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
-                //return RedirectToAction("Fracaso");
+                TempData["ModalMessage"] = "Error al intentar insertar el empleado.";
                 return View(listarPuestos());
             }
         }
@@ -93,7 +92,7 @@ namespace Progra2.Controllers
 
             if (resultado == 0)
             {
-                TempData["ShowModal"] = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Error al intentar editar el empleado.";
                 return RedirectToAction("Listar");
             }
             else
