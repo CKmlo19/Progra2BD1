@@ -4,6 +4,7 @@ using Progra2.Data;
 using Progra2.Models;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace Progra2.Controllers
 {
@@ -12,19 +13,23 @@ namespace Progra2.Controllers
     {
         EmpleadoData _EmpleadoDatos = new EmpleadoData();
 
+
         public IActionResult Listar()
         {
             // la lista mostrara una lista de empleados
-            var oLista = _EmpleadoDatos.Listar(""); // llama al metodo de listar y lo muestra
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+            var oLista = _EmpleadoDatos.Listar("", UsuarioModel.GetInstance().id, ipAddress); // llama al metodo de listar y lo muestra
             return View(oLista);
         }
         [HttpPost]
         public IActionResult Listar(string campo)
         {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
+
             if (campo == null) {
                 campo = "";
             }
-            var oLista = _EmpleadoDatos.Listar(campo);
+            var oLista = _EmpleadoDatos.Listar(campo, UsuarioModel.GetInstance().id, ipAddress);
             return View(oLista);
         }
         public IActionResult Insertar()
@@ -39,7 +44,7 @@ namespace Progra2.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Insertar(EmpleadoModel oEmpleado, UsuarioModel usuario)
+        public IActionResult Insertar(EmpleadoModel oEmpleado)
         {
 
             //validacion de los campos
@@ -47,9 +52,8 @@ namespace Progra2.Controllers
             { // funcion propia que sirve para saber si un campo esta vacio, true si todo bien, false si hay algo malo
                 return View(listarPuestos());
             }
-            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
             var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
-            var resultado = _EmpleadoDatos.Insertar(oEmpleado, esUsuarioValido, ipAddress);
+            var resultado = _EmpleadoDatos.Insertar(oEmpleado, UsuarioModel.GetInstance().id, ipAddress);
 
             if (resultado == 0)
             {
@@ -74,7 +78,7 @@ namespace Progra2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Editar(EmpleadoModel oEmpleado, UsuarioModel usuario)
+        public IActionResult Editar(EmpleadoModel oEmpleado)
         {
             
 
@@ -84,9 +88,8 @@ namespace Progra2.Controllers
                 return View(listarPuestos());
             }
 
-            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
             var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
-            var resultado = _EmpleadoDatos.Editar(oEmpleado, esUsuarioValido, ipAddress);
+            var resultado = _EmpleadoDatos.Editar(oEmpleado, UsuarioModel.GetInstance().id, ipAddress);
 
             if (resultado == 0)
             {
@@ -111,7 +114,7 @@ namespace Progra2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Eliminar(EmpleadoModel oEmpleado, UsuarioModel usuario)
+        public IActionResult Eliminar(EmpleadoModel oEmpleado)
         {
 
             //validacion de los campos
@@ -120,9 +123,8 @@ namespace Progra2.Controllers
                 return View(listarPuestos());
             }
 
-            int esUsuarioValido = _EmpleadoDatos.VerificarUsuario(usuario); // Verificar el usuario en la base de datos 
             var ipAddress = HttpContext.Connection.RemoteIpAddress.ToString(); // Obtiene la IP del usuario
-            var resultado = _EmpleadoDatos.Eliminar(oEmpleado.Id, esUsuarioValido, ipAddress);
+            var resultado = _EmpleadoDatos.Eliminar(oEmpleado.Id, UsuarioModel.GetInstance().id, ipAddress, 1);
 
             if (resultado == 0)
             {

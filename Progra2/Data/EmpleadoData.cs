@@ -11,7 +11,7 @@ namespace Progra2.Data
     public class EmpleadoData
     {
         // este metodo lista en orden alfabetico 
-        public List<EmpleadoModel> Listar(string campo)
+        public List<EmpleadoModel> Listar(string campo, int IdUser, string IP)
         {
             var oLista = new List<EmpleadoModel>();
 
@@ -39,6 +39,8 @@ namespace Progra2.Data
                 };
                 cmd.Parameters.AddWithValue("inCodigo", num);
                 cmd.Parameters.AddWithValue("inCampo", campo);
+                cmd.Parameters.AddWithValue("inIdPostByUser", IdUser);
+                cmd.Parameters.AddWithValue("inPostInIP", IP);
                 cmd.Parameters.Add(outputParam);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -107,7 +109,7 @@ namespace Progra2.Data
             catch (Exception e)
             {
                 string error = e.Message;
-                resultado = 50006;
+                resultado = 50008;
 
             }
             return resultado;
@@ -130,7 +132,7 @@ namespace Progra2.Data
                     cmd.Parameters.AddWithValue("inId", oEmpleado.Id);
                     cmd.Parameters.AddWithValue("inNombre", oEmpleado.Nombre.Trim()); // se le hace un trim a la hora de insertar
                     cmd.Parameters.AddWithValue("inIdPuesto", oEmpleado.IdPuesto);
-                    cmd.Parameters.AddWithValue("inValorDocumentoIdentidad", oEmpleado.ValorDocumentoIdentidad);
+                    cmd.Parameters.AddWithValue("inValorDocumentoIdentidad", oEmpleado.ValorDocumentoIdentidad.Trim());
                     cmd.Parameters.AddWithValue("inIdUser", IdUser);
                     cmd.Parameters.AddWithValue("inIP", IP);
                     // Configurar el parámetro de salida
@@ -158,7 +160,7 @@ namespace Progra2.Data
             return resultado;
 
         }
-        public int Eliminar(int id, int IdUser, string IP)
+        public int Eliminar(int id, int IdUser, string IP, int bandera)
         {
             int resultado;
 
@@ -175,6 +177,8 @@ namespace Progra2.Data
                     cmd.Parameters.AddWithValue("inId", id); // se le hace un trim a la hora de insertar
                     cmd.Parameters.AddWithValue("inIdUser", IdUser);
                     cmd.Parameters.AddWithValue("inIP", IP);
+                    cmd.Parameters.AddWithValue("inBandera", IP);
+
                     // Configurar el parámetro de salida
                     SqlParameter outputParam = new SqlParameter("@OutResultCode", SqlDbType.Int)
                     {
@@ -192,7 +196,7 @@ namespace Progra2.Data
             }
             catch (Exception e)
             {
-                resultado = 50006;
+                resultado = 50008;
 
             }
 
@@ -320,7 +324,7 @@ namespace Progra2.Data
             catch (Exception e)
             {
                 // Si ocurre un error, el código 50005 es un código de error estándar
-                resultado = 50005;
+                resultado = 50008;
             }
 
             return resultado;
