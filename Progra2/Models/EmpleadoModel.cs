@@ -31,5 +31,9 @@ namespace Progra2.Models
             }
             return _instance;
         }
+
+        public void SetEmpleado(EmpleadoModel empleado) {
+            _instance = empleado;
+        }
     }
 }

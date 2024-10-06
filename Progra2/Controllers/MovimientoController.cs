@@ -12,8 +12,7 @@ namespace Progra2.Controllers
         public IActionResult Listar(int id)
         {
             var oLista = _movimientoData.Listar(id);
-            EmpleadoModel.GetInstance().Id = id;
-
+            EmpleadoModel.GetInstance().SetEmpleado(_empleadoData.Obtener(id));
             return View(oLista);
             
         }
@@ -41,12 +40,12 @@ namespace Progra2.Controllers
 
             if (resultado == 0)
             {
-                TempData["ShowModal"] = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Insercion de Movimiento Exitosa!.";
                 return RedirectToAction("Listar", new { id = EmpleadoModel.GetInstance().Id });
             }
             else
             {
-                ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Monto del movimiento rechazado pues si se aplicar el saldo seria negativo.";
                 //return RedirectToAction("Fracaso");
                 return View(ListarMovimientos());
             }

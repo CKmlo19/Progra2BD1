@@ -57,7 +57,7 @@ namespace Progra2.Controllers
 
             if (resultado == 0)
             {
-                TempData["ShowModal"] = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Insercion Exitosa!.";
                 return RedirectToAction("Listar");
             }
             else
@@ -97,7 +97,7 @@ namespace Progra2.Controllers
             }
             else
             {
-                ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Edicion Exitosa!.";
                 //return RedirectToAction("Fracaso");
                 return View(listarPuestos());
             }
@@ -121,12 +121,12 @@ namespace Progra2.Controllers
 
             if (resultado == 0)
             {
-                TempData["ShowModal"] = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Borrado Exitoso!";
                 return RedirectToAction("Listar");
             }
             else
             {
-                ViewBag.ShowErrorModal = true; // Indicador para mostrar el modal
+                TempData["ModalMessage"] = "Solicitud de borrado fallido";
                 //return RedirectToAction("Fracaso");
                 return View(listarPuestos());
             }

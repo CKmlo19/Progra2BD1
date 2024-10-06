@@ -37,8 +37,8 @@
                         <td>@item.SaldoVacaciones</td>
                         <td>@item.NombrePuesto</td>
                         <td>
-                            <a asp-action="Editar" asp-controller="Empleado" class="btn btn-primary btn-sm" asp-route-Id="@item.Id"><i class="bi bi-pencil-square"></i>Editar</a>
-                            <a asp-action="Eliminar" asp-controller="Empleado" class="btn btn-danger btn-sm" asp-route-Id="@item.Id"><i class="bi bi-trash-fill"></i>Eliminar</a>
+                            <a asp-action="Editar" asp-controller="Empleado" class="btn btn-primary btn-sm" asp-route-Id="@item.Id"><i class="bi bi-pencil-square"></i> Editar</a>
+                            <a asp-action="Eliminar" asp-controller="Empleado" class="btn btn-danger btn-sm" asp-route-Id="@item.Id"><i class="bi bi-trash-fill"></i> Eliminar</a>
                             <a asp-action="Listar" asp-controller="Movimiento" class="btn btn-dark btn-sm" asp-route-Id="@item.Id"><i class="bi bi-wallet2"></i> Ver Movimientos</a>
 
                         </td>
@@ -47,33 +47,8 @@
 
             </tbody>
         </table>
-        <a asp-action="Insertar" asp-controller="Empleado" class="btn btn-success"><i class="bi bi-plus-circle"></i>Insertar</a>
-    </div>
-    <!-- Modal de inserción exitosa -->
-    <div class="modal fade" id="insertionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Inserción Exitosa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Se insertó al empleado de manera exitosa.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
+        <a asp-action="Insertar" asp-controller="Empleado" class="btn btn-success"><i class="bi bi-plus-circle"></i> Insertar</a>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        // Mostrar el modal si TempData["ShowModal"] está en true
-        var showModal = '@(TempData["ShowModal"] ?? false)';
-        if (showModal.toLowerCase() === 'true') {
-            $('#insertionModal').modal('show');
-        }
-    });
-</script>
+
 
